@@ -31,6 +31,7 @@ This is an unofficial wrapper for the Wunderlist API.
 * It uses the standard Angular $http service and returns the promises so you can do whatever you need with the data
 * All set() functions are chainable, to reduce the steps and footprint of your code
 * It exposes the raw promise without modification to give you access to all the data you would have if you call the API yourself.
+
 ##<a name="install"></a> Install
  <a name="manual"></a>**Manual**: download latest from [here](hhttps://github.com/SirFixAL0t/Angular-Wunderlist/releases/latest)
  
