@@ -42,12 +42,12 @@ This is an unofficial wrapper for the Wunderlist API.
  ```
 
 ##<a name="usage"></a> Usage
- ### Add the module to your app
+### Add the module to your app
  ```js
  var myAwesomeApp = angular.module('MyAwesomeApp', [..., 'ngWunderlistModule']);
 ```
 
- ### Configure the library
+### Configure the library
  ```js
  myAwesomeApp.config(['ngWunderlistConfiguratorProvider', function(ngWunderlistConfigurator){
         ngWunderlistConfigurator.setClientId(Wunderlist_Client_ID);
@@ -55,7 +55,7 @@ This is an unofficial wrapper for the Wunderlist API.
     ]);
 ```
 
- ### Inject the main service into your controller and start using
+### Inject the main service into your controller and start using
  ```js 
  myAwesomeApp.controller('MyAwesomeController', ['ngWunderlistService', function(ngWunderlistService){
      var lists = ngWunderlistService.getEndpoint('lists');
@@ -128,10 +128,12 @@ This is an unofficial wrapper for the Wunderlist API.
           console.log(list_tasks); //this will log all your tasks for your list
           });
     ```
+
 ###Executing a GET request
 Executing get requests can be interpreted in two ways. 
 * [Getting one record (appending the ID to the query string)](#onerecord)
 * [Getting all records for a specific endpoint](#allrecords)
+
 ####<a name="onerecord"></a> Getting one record
 
 To get one record, we first need to tell the system which record we want. There are two ways of doing this: 
