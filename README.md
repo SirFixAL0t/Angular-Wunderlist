@@ -67,45 +67,45 @@ This is an unofficial wrapper for the Wunderlist API.
 
 ### Available endpoints:
 
-   All endpoints available in the Wunderlist API are enabled except: 
-   * File Preview (https://developer.wunderlist.com/documentation/endpoints/file_preview) 
+#### All endpoints available in the Wunderlist API are enabled except: 
+* File Preview (https://developer.wunderlist.com/documentation/endpoints/file_preview) 
          **Note**: This one is implemented but untested.
-   * Upload (https://developer.wunderlist.com/documentation/endpoints/upload)
-   * File (https://developer.wunderlist.com/documentation/endpoints/file)
-   * Avatar (https://developer.wunderlist.com/documentation/endpoints/avatar)
+* Upload (https://developer.wunderlist.com/documentation/endpoints/upload)
+* File (https://developer.wunderlist.com/documentation/endpoints/file)
+* Avatar (https://developer.wunderlist.com/documentation/endpoints/avatar)
          **Note**: This one is implemented and tested, but is useless as the API redirects the user to a different site and the redirection is blocked by angular.
-   * Webhooks (https://developer.wunderlist.com/documentation/endpoints/webhooks)
-   
-* How to determine the name of your endpoint?
-    
-    Endpoints are named after the URL they point to. For example, the **lists** endpoint points to 
+* Webhooks (https://developer.wunderlist.com/documentation/endpoints/webhooks)
+  
+#### How to determine the name of your endpoint?
+
+Endpoints are named after the URL they point to. For example, the **lists** endpoint points to 
     a.wunderlist.com/api/v1/**lists**.
     All of the endpoints follow this convention, except the Positions. 
     
-    The positions endpoint was divided in three. This was done so the code looks similar to other endpoints. 
+The positions endpoint was divided in three. This was done so the code looks similar to other endpoints. 
     You have three available endpoints:
     * task_positions
     * subtask_positions
     * list_positions
     
-* Special functions such as folder_revisions
+#### Special functions such as folder_revisions
 
-    If the endpoint offers more functionality, a special function was created for it for easy of use
+If the endpoint offers more functionality, a special function was created for it for easy of use
     
-    For example, the folder_revisions is available as **getFolderRevisions** of the **folders** endpoint.
+For example, the folder_revisions is available as **getFolderRevisions** of the **folders** endpoint.
     
-    A list of the special functions is found below
+A list of the special functions is found below
     
-    * Folders: getFolderRevisions()
-    * Tasks: notes()
-    * Lists: tasks()
+* Folders: getFolderRevisions()
+* Tasks: notes()
+* Lists: tasks()
     
-* Getting Related data (such as lists tasks)
+####Getting Related data (such as lists tasks)
 
-    For the APIs that are related (such as notes for tasks and tasks for lists), you can do this easily by calling the special functions lists.task() or tasks.notes()
+For the APIs that are related (such as notes for tasks and tasks for lists), you can do this easily by calling the special functions lists.task() or tasks.notes()
      
-    Please keep in mind that this functions will require you to set a specific ID for tasks and lists before you can use them. You can do it as follows
-    ```js
+Please keep in mind that this functions will require you to set a specific ID for tasks and lists before you can use them. You can do it as follows
+```js
     //You can do it in one step
     var lists = ngWunderlistService.getEndpoint('lists', 12345);
     //Or you can do it in two steps
@@ -119,15 +119,15 @@ This is an unofficial wrapper for the Wunderlist API.
     tasks.getAll().then(function(list_tasks){
       console.log(list_tasks); //this will log all your tasks for your list
       });
-    ```
-    If you want to do manually, you can do the following
-    ```js
+```
+If you want to do manually, you can do the following
+```js
     var tasks = ngWunderlistService.getEndpoint('tasks');
     tasks.setListId(9999);
     tasks.getAll().then(function(list_tasks){
           console.log(list_tasks); //this will log all your tasks for your list
           });
-    ```
+```
 
 ###Executing a GET request
 Executing get requests can be interpreted in two ways. 
