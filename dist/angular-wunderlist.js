@@ -52,9 +52,9 @@
                 var _id = id || false;
                 var endpointName = 'Endpoint_' + capitalize(name);
                 if (!instances.hasOwnProperty(endpointName)) {
-                    instances[endpointName] = new ngWunderlistEndpoint[endpointName](name, _id);
+                    instances[endpointName] = new ngWunderlistEndpoint[endpointName](name);
                 }
-                return instances[endpointName];
+                return instances[endpointName].setId(_id);
             } catch (e) {
                 console.error(e);
             }
@@ -86,11 +86,11 @@
      */
     var ngWunderlistEndpointService = ['ngWunderlistValidation', '$http', 'ngWunderlistConfigurator', function (ngWVal, $http, configurator) {
 
-        var WunderlistEndpoint = function (name, id) {
+        var WunderlistEndpoint = function (name) {
 
             this.validFields = [];
             this.endpoint = name;
-            this.identifier = id;
+            this.identifier = false;
             this.fieldValidation = {};
             this.endpointData = {};
             this.availableMethods = Methods.CREATE | Methods.DELETE | Methods.UPDATE | Methods.GET | Methods.GETALL;
@@ -276,7 +276,8 @@
                     if (!validationObject.hasOwnProperty('strategy')) {
                         throw new Error('SYSTEM_ERROR field validation does not contain a strategy');
                     }
-                    new (validationObject.strategy)().setValue(_data[property]).setProperty(property).validate(validationObject.allowEmpty);
+                    var emptyAllowed = validationObject.allowEmpty || false;
+                    new (validationObject.strategy)().setValue(_data[property]).setProperty(property).validate(emptyAllowed);
                 }
 
                 this.postValidation(scenario);
@@ -364,6 +365,7 @@
                 throw new Error('Cannot create a new child for ' + this.getEndpoint() + ' without data');
             }
 
+
             this.validate(Scenarios.CREATE);
             return this.execute(this.getEndpoint(), Methods.CREATE);
         };
@@ -449,13 +451,11 @@
         /**
          * @description File Preview API endpoint
          * @link https://developer.wunderlist.com/documentation/endpoints/file_preview
-         * @param {String} name
-         * @param {Number} [id=undefined]
          *
          * @returns Function returns a function representing the endpoint object for the FilePreview API
          */
-        var Endpoint_Filepreview = function (name, id) {
-            WunderlistEndpoint.call(this, 'previews', id);
+        var Endpoint_Filepreview = function () {
+            WunderlistEndpoint.call(this, 'previews');
             this.setAvailableMethods(Methods.GET);
         };
 
@@ -463,12 +463,11 @@
          * @description Folders API endpoint
          * @link https://developer.wunderlist.com/documentation/endpoints/folder
          * @param {String} name
-         * @param {Number} [id=undefined]
          *
          * @returns Function returns a function representing the endpoint object for the Folders API
          */
-        var Endpoint_Folders = function (name, id) {
-            WunderlistEndpoint.call(this, name, id);
+        var Endpoint_Folders = function (name) {
+            WunderlistEndpoint.call(this, name);
             this.setValidFields('title,revision,list_ids'.split(','));
             var validations = {};
             validations[Scenarios.CREATE] = {
@@ -479,7 +478,7 @@
             validations[Scenarios.UPDATE] = {
                 'title': {'strategy': ngWVal.StringValidation},
                 'revision': {'strategy': ngWVal.IDNumericValidation},
-                'lists_ids': {'allowEmpty': true, 'strategy': ngWVal.ArrayValidation}
+                'list_ids': {'allowEmpty': true, 'strategy': ngWVal.ArrayValidation}
             };
             this.setFieldValidation(validations);
             this.getFolderRevisions = function () {
@@ -491,12 +490,11 @@
          * @description Users API endpoint
          * @link https://developer.wunderlist.com/documentation/endpoints/user
          * @param {String} name
-         * @param {Number} [id=undefined]
          *
          * @returns Function returns a function representing the endpoint object for the User API
          */
-        var Endpoint_User = function (name, id) {
-            WunderlistEndpoint.call(this, name, id);
+        var Endpoint_User = function (name) {
+            WunderlistEndpoint.call(this, name);
             this.setAvailableMethods(Methods.GET | Methods.GETALL);
         };
 
@@ -504,12 +502,11 @@
          * @description Lists API endpoint
          * @link https://developer.wunderlist.com/documentation/endpoints/list
          * @param {String} name
-         * @param {Number} [id=undefined]
          *
          * @returns Function returns a function representing the endpoint object for the List API
          */
-        var Endpoint_Lists = function (name, id) {
-            WunderlistEndpoint.call(this, name, id);
+        var Endpoint_Lists = function (name) {
+            WunderlistEndpoint.call(this, name);
             this.setValidFields('title,revision'.split(','));
             var validations = {};
             validations[Scenarios.CREATE] = {
@@ -536,12 +533,11 @@
          * @description Memberships API endpoint
          * @link https://developer.wunderlist.com/documentation/endpoints/membership
          * @param {String} name
-         * @param {Number} [id=undefined]
          *
          * @returns Function returns a function representing the endpoint object for the Memberships API
          */
-        var Endpoint_Memberships = function (name, id) {
-            WunderlistEndpoint.call(this, name, id);
+        var Endpoint_Memberships = function (name) {
+            WunderlistEndpoint.call(this, name);
             this.setAvailableMethods(Methods.GETALL | Methods.CREATE | Methods.UPDATE | Methods.DELETE);
             this.setValidFields('list_id,user_id,email,muted,state,revision'.split(','));
             var validations = {};
@@ -568,12 +564,11 @@
          * @description Tasks API endpoint
          * @link https://developer.wunderlist.com/documentation/endpoints/task
          * @param {String} name
-         * @param {Number} [id=undefined]
          *
          * @returns Function returns a function representing the endpoint object for the Tasks API
          */
-        var Endpoint_Tasks = function (name, id) {
-            WunderlistEndpoint.call(this, name, id);
+        var Endpoint_Tasks = function (name) {
+            WunderlistEndpoint.call(this, name);
             this.setValidFields('list_id,title,assignee_id,completed,recurrence_type,recurrent_count,due_date,starred,revision,remove'.split(','));
             var validations = {};
             validations[Scenarios.CREATE] = {
@@ -616,12 +611,11 @@
          * @description Notes API endpoint
          * @link https://developer.wunderlist.com/documentation/endpoints/note
          * @param {String} name
-         * @param {Number} [id=undefined]
          *
          * @returns Function returns a function representing the endpoint object for the Notes API
          */
-        var Endpoint_Notes = function (name, id) {
-            WunderlistEndpoint.call(this, name, id);
+        var Endpoint_Notes = function (name) {
+            WunderlistEndpoint.call(this, name);
             this.setValidFields('task_id,content,revision'.split(','));
             var validations = {};
             validations[Scenarios.CREATE] = {
@@ -648,12 +642,11 @@
          *
          * @link https://developer.wunderlist.com/documentation/endpoints/positions
          * @param {String} name
-         * @param {Number} [id=undefined]
          *
          * @abstract Use List_positions, Task_positions, or Subtask_positions
          */
-        var Endpoint_Positions = function (name, id) {
-            WunderlistEndpoint.call(this, false, id);
+        var Endpoint_Positions = function (name) {
+            WunderlistEndpoint.call(this, false);
             this.setAvailableMethods(Methods.GETALL | Methods.GET | Methods.UPDATE);
             this.setValidFields('values,revision'.split(','));
             var validations = {};
@@ -668,14 +661,13 @@
          * @description Position API endpoint
          * @link https://developer.wunderlist.com/documentation/endpoints/positions
          * @param {String} name
-         * @param {Number} [id=undefined]
          *
          * @see Endpoint_Positions
          *
          * @returns Function returns a function representing the endpoint object for the List Positions API
          */
-        var Endpoint_List_positions = function (name, id) {
-            Endpoint_Positions.call(this, name, id);
+        var Endpoint_List_positions = function (name) {
+            Endpoint_Positions.call(this, name);
             this.setEndpoint('list_positions');
         };
 
@@ -683,14 +675,13 @@
          * @description Position API endpoint
          * @link https://developer.wunderlist.com/documentation/endpoints/positions
          * @param {String} name
-         * @param {Number} [id=undefined]
          *
          * @see Endpoint_Positions
          *
          * @returns Function returns a function representing the endpoint object for the Task Positions API
          */
-        var Endpoint_Task_positions = function (name, id) {
-            Endpoint_Positions.call(this, name, id);
+        var Endpoint_Task_positions = function (name) {
+            Endpoint_Positions.call(this, name);
             this.setEndpoint('task_positions');
         };
 
@@ -698,14 +689,13 @@
          * @description Position API endpoint
          * @link https://developer.wunderlist.com/documentation/endpoints/positions
          * @param {String} name
-         * @param {Number} [id=undefined]
          *
          * @see Endpoint_Positions
          *
          * @returns Function returns a function representing the endpoint object for the Subtask Positions API
          */
-        var Endpoint_Subtask_positions = function (name, id) {
-            Endpoint_Positions.call(this, name, id);
+        var Endpoint_Subtask_positions = function (name) {
+            Endpoint_Positions.call(this, name);
             this.setEndpoint('subtask_positions');
         };
 
@@ -713,12 +703,11 @@
          * @description Reminders API endpoint
          * @link https://developer.wunderlist.com/documentation/endpoints/reminder
          * @param {String} name
-         * @param {Number} [id=undefined]
          *
          * @returns Function returns a function representing the endpoint object for the Reminders API
          */
-        var Endpoint_Reminders = function (name, id) {
-            WunderlistEndpoint.call(this, name, id);
+        var Endpoint_Reminders = function (name) {
+            WunderlistEndpoint.call(this, name);
             this.setValidFields('task_id,date,created_by_device_udid,revision'.split(','));
             this.setAvailableMethods(Methods.CREATE | Methods.UPDATE | Methods.DELETE | Methods.GETALL);
             var validations = {};
@@ -740,12 +729,11 @@
          * @description Root API endpoint
          * @link https://developer.wunderlist.com/documentation/endpoints/root
          * @param {String} name
-         * @param {Number} [id=undefined]
          *
          * @returns Function returns a function representing the endpoint object for the Root API
          */
-        var Endpoint_Root = function (name, id) {
-            WunderlistEndpoint.call(this, name, id);
+        var Endpoint_Root = function (name) {
+            WunderlistEndpoint.call(this, name);
             this.setAvailableMethods(Methods.GET);
         };
 
@@ -753,12 +741,11 @@
          * @description Subtasks API endpoint
          * @link https://developer.wunderlist.com/documentation/endpoints/subtask
          * @param {String} name
-         * @param {Number} [id=undefined]
          *
          * @returns Function returns a function representing the endpoint object for the Subtasks API
          */
-        var Endpoint_Subtasks = function (name, id) {
-            WunderlistEndpoint.call(this, name, id);
+        var Endpoint_Subtasks = function (name) {
+            WunderlistEndpoint.call(this, name);
             this.setValidFields('task_id,title,completed,revision'.split(','));
             var validations = {};
             validations[Scenarios.CREATE] = {
@@ -779,12 +766,11 @@
          * @description Task Comments API endpoint
          * @link https://developer.wunderlist.com/documentation/endpoints/task_comment
          * @param {String} name
-         * @param {Number} [id=undefined]
          *
          * @returns Function returns a function representing the endpoint object for the Task Comments API
          */
-        var Endpoint_Task_comments = function (name, id) {
-            WunderlistEndpoint.call(this, name, id);
+        var Endpoint_Task_comments = function (name) {
+            WunderlistEndpoint.call(this, name);
             this.setValidFields('revision,task_id,text'.split(','));
             this.setAvailableMethods(Methods.GET | Methods.GETALL | Methods.CREATE | Methods.DELETE);
             var validations = {};
@@ -804,14 +790,13 @@
          * @description Avatar API endpoint
          * @link https://developer.wunderlist.com/documentation/endpoints/avatar
          * @param {String} name
-         * @param {Number} [id=undefined]
          *
          * @ignore This function has little to no value for now, as it redirects the user and angular won't let the redirection go through/
          *
          * @returns Function returns a function representing the endpoint object for the Folders API
          */
-        var Endpoint_Avatar = function (name, id) {
-            WunderlistEndpoint.call(this, name, id);
+        var Endpoint_Avatar = function (name) {
+            WunderlistEndpoint.call(this, name);
             this.setAvailableMethods(Methods.GET);
         };
 
@@ -894,12 +879,12 @@
         Endpoint_Memberships.prototype.postValidation = function (scenario) {
             var _data = this.getData();
             switch (scenario) {
-                case Methods.CREATE:
+                case Scenarios.CREATE:
                     if (!_data.user_id && !_data.email) {
                         throw new Error(this.getEndpoint() + ' creation requires either a user_id or email');
                     }
                     break;
-                case Methods.UPDATE:
+                case Scenarios.UPDATE:
                     if (_data.state !== 'accepted') {
                         throw new Error(this.getEndpoint() + ' update requires state to be accepted');
                     }
@@ -1116,12 +1101,6 @@
 
     var ngWunderlistValidationService = function () {
         var Validation = function (name, variableType) {
-            this.name = name;
-            this.variableType = variableType;
-            this.validateType = true;
-            this.property = undefined;
-            this.value = undefined;
-            this.allowEmpty = false;
 
             this.setName = function (name) {
                 this.name = name;
@@ -1150,6 +1129,11 @@
                 return this.value;
             };
 
+            this.setVariableType = function (type) {
+                this.variableType = type;
+                return this;
+            };
+
             this.getVariableType = function () {
                 return this.variableType;
             };
@@ -1172,7 +1156,7 @@
 
             this.validate = function (allowEmpty) {
                 if (allowEmpty) {
-                    this.allowEmpty(!!allowEmpty);
+                    this.setAllowEmpty(!!allowEmpty);
                 }
                 if (this.getValidateType() && (((typeof this.getValue()) != this.getVariableType()) && (typeof this.getValue() !== 'undefined'))) {
                     this.typeError();
@@ -1187,6 +1171,14 @@
             this.typeError = function () {
                 throw new Error(this.getProperty() + ' is not of type ' + this.getVariableType());
             };
+
+            this.setName(name);
+            this.setVariableType(variableType);
+            this.validateType = true;
+            this.property = undefined;
+            this.value = undefined;
+            this.allowEmpty = false;
+
         };
 
         Validation.prototype.validationFunction = function () {
@@ -1294,11 +1286,13 @@
 
         ArrayValidation.prototype.validationFunction = function () {
             var value = this.getValue();
-            if (!this.getAllowEmpty() && value.length < 0) {
-                this.error('cannot be empty');
+
+            if (!this.getAllowEmpty() && !Array.isArray(value)) {
+                this.error('not an array');
             }
-            if (!Array.isArray(value) && value > 0) {
-                this.error('is not an Array');
+
+            if (!this.getAllowEmpty() && (!value || value.length <= 0)) {
+                this.error('cannot be empty');
             }
         };
 
