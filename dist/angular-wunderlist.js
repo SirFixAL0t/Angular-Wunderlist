@@ -11,19 +11,18 @@
      */
     var _allowedEndpoints = 'avatar,files,previews,folders,lists,memberships,notes,list_positions,task_positions,subtask_positions,reminders,root,subtasks,tasks,task_comments,uploads,user,webhooks'.split(',');
 
-    var Methods = {
-        GET: 1,
-        GETALL: 2,
-        CREATE: 4,
-        UPDATE: 8,
-        DELETE: 16
-    };
+    /**
+     * Bitmasks to check which methods are enabled and which ones are not. This is to reduce footprint of library.
+     * Went from using 5 Strings of avg(5) characters to using 2 bytes + the object storage room.
+     * @type {{GET: number, GETALL: number, CREATE: number, UPDATE: number, DELETE: number}}
+     */
+    var Methods = { GET: 1, GETALL: 2, CREATE: 4, UPDATE: 8, DELETE: 16};
 
-    var Scenarios = {
-        CREATE: 1,
-        UPDATE: 2
-    };
-
+    /**
+     * Bitmasks to check which scenario is being used. This is to reduce the footprint of the library
+     * @type {{CREATE: number, UPDATE: number}}
+     */
+    var Scenarios = { CREATE: 1, UPDATE: 2};
     var validScenarios = Scenarios.CREATE | Scenarios.UPDATE;
 
     /**
