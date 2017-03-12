@@ -33,7 +33,7 @@ This is an unofficial wrapper for the Wunderlist API.
 * It exposes the raw promise without modification to give you access to all the data you would have if you call the API yourself.
 
 ##<a name="install"></a> Install
- <a name="manual"></a>**Manual**: download latest from [here](hhttps://github.com/SirFixAL0t/Angular-Wunderlist/releases/latest)
+ <a name="manual"></a>**Manual**: download latest from [here](https://github.com/SirFixAL0t/Angular-Wunderlist/releases/latest)
  
  Place it in your vendor (or favorite location) and include it into your project. Make sure you include Angular first.
  ```html
