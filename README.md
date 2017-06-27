@@ -19,10 +19,10 @@ Table of Content:
 * [Install](#install) ([Manual](#manual))
 * [Usage](#usage)
 
-##<a name="disclaimer"></a> Disclaimer
+## <a name="disclaimer"></a> Disclaimer
 This is an unofficial wrapper for the Wunderlist API.
 
-##<a name="features"></a> Features
+## <a name="features"></a> Features
 * This unofficial wrapper offers access to the majority of the Wunderlist API endpoints. 
 * The wrapper offers a Provider object that allows for easy setup. It uses your Wunderlist issued Auth Token and Client ID
 * It offers easy access to all the different verbs available in the API as object functions
@@ -32,7 +32,7 @@ This is an unofficial wrapper for the Wunderlist API.
 * All set() functions are chainable, to reduce the steps and footprint of your code
 * It exposes the raw promise without modification to give you access to all the data you would have if you call the API yourself.
 
-##<a name="install"></a> Install
+## <a name="install"></a> Install
  <a name="manual"></a>**Manual**: download latest from [here](https://github.com/SirFixAL0t/Angular-Wunderlist/releases/latest)
  
  Place it in your vendor (or favorite location) and include it into your project. Make sure you include Angular first.
@@ -41,7 +41,7 @@ This is an unofficial wrapper for the Wunderlist API.
  <script src="your/vendor/path/angular-wunderlist(.min).js"></script>
  ```
 
-##<a name="usage"></a> Usage
+## <a name="usage"></a> Usage
 ### Add the module to your app
  ```js
  var myAwesomeApp = angular.module('MyAwesomeApp', [..., 'ngWunderlistModule']);
@@ -100,7 +100,7 @@ A list of the special functions is found below
 * Tasks: notes()
 * Lists: tasks()
     
-####Getting Related data (such as lists tasks)
+#### Getting Related data (such as lists tasks)
 
 For the APIs that are related (such as notes for tasks and tasks for lists), you can do this easily by calling the special functions lists.task() or tasks.notes()
      
@@ -129,12 +129,12 @@ If you want to do manually, you can do the following
           });
 ```
 
-###Executing a GET request
+### Executing a GET request
 Executing get requests can be interpreted in two ways. 
 * [Getting one record (appending the ID to the query string)](#onerecord)
 * [Getting all records for a specific endpoint](#allrecords)
 
-####<a name="onerecord"></a> Getting one record
+#### <a name="onerecord"></a> Getting one record
 
 To get one record, we first need to tell the system which record we want. There are two ways of doing this: 
 
@@ -161,7 +161,7 @@ lists.get().then(function(record){
 });
 ```
 
-####<a name="allrecords"></a> Getting all records for a specific endpoint
+#### <a name="allrecords"></a> Getting all records for a specific endpoint
 
 To get all records for a given API, you can simply call the getAll() function. This returns an array with all the available data points in your endpoint
 ```js
@@ -176,7 +176,7 @@ lists.getAll().then(function(all_lists){
 });
 ```
 
-###Executing a POST request
+### Executing a POST request
 
 Post requests are called "Create" in the ngWunderlist library. To create an element, you need to pass the create() function the right data with the right format. 
 
@@ -199,7 +199,7 @@ tasks.setParams({list_id: 12345}).create({...});
 
 The example above will result in a POST request to **a.wunderlist.com/api/v1/tasks?list_id=12345** and the body of the post is the object sent to the **create()** function.
 
-###Executing a PATCH request
+### Executing a PATCH request
 
 Patch requests are called "Updates" in the ngWunderlist library. To update an element, you need the proper data, but you also need the proper revision number. To know what data you need to send, please check the Wunderlist Documentation for the desired API
 
@@ -215,7 +215,7 @@ folder.get().then(function(my_folder){
 });
 ```
 
-###Executing a DELETE request 
+### Executing a DELETE request 
 
 To execute a delete request, you just need a valid ID and the latest revision of your object. **delete()** only takes an object with the revision: 
 ```js
